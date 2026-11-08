@@ -1,0 +1,16 @@
+{
+  "baseline": {
+    "epochs_run": 15,
+    "best_epoch": 14,
+    "best_val_loss": 0.5778225660324097,
+    "best_val_accuracy": 0.6917808055877686
+  },
+  "transfer": {
+    "stage_1_epochs": 8,
+    "stage_2_epochs": 8,
+    "best_epoch_overall": 16,
+    "best_val_loss": 0.4400613307952881,
+    "best_val_accuracy": 0.7945205569267273,
+    "trainable_base_layers_stage_2": 13
+  }
+}

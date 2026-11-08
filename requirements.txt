@@ -139,3 +139,9 @@ wheel==0.48.0
 wrapt==2.5.2
 yarl==1.25.1
 zc.lockfile==4.1
+tensorboard
+mlflow
+python-dotenv
+Flask
+waitress
+pytest

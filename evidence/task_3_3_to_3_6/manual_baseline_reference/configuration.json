@@ -1,0 +1,9 @@
+{
+  "name": "manual_baseline_reference",
+  "logging": "manual",
+  "family": "baseline",
+  "learning_rate": 0.001,
+  "dropout": 0.4,
+  "augmentation": true,
+  "unfrozen_layers": 0
+}

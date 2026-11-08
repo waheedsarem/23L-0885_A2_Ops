@@ -1,0 +1,8 @@
+{
+  "run_id": "67ce98df886746c5a699538d60610e19",
+  "learning_rate": 0.001,
+  "final_train_loss": 0.6233872771263123,
+  "final_train_accuracy": 0.7864000201225281,
+  "final_val_loss": 0.6414961218833923,
+  "final_val_accuracy": 0.7739999890327454
+}

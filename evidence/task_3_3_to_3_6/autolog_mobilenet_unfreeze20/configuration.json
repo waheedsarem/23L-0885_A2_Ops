@@ -1,0 +1,9 @@
+{
+  "name": "autolog_mobilenet_unfreeze20",
+  "logging": "autolog",
+  "family": "mobilenetv2",
+  "learning_rate": 1e-05,
+  "dropout": 0.35,
+  "augmentation": true,
+  "unfrozen_layers": 20
+}

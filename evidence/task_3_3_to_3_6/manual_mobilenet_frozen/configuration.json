@@ -1,0 +1,9 @@
+{
+  "name": "manual_mobilenet_frozen",
+  "logging": "manual",
+  "family": "mobilenetv2",
+  "learning_rate": 0.001,
+  "dropout": 0.35,
+  "augmentation": true,
+  "unfrozen_layers": 0
+}

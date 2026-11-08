@@ -1,0 +1,18 @@
+[
+  {
+    "file": "dataset\\raw\\RealArt\\RealArt\\-man-sits-with-a-woman-on-her-phone-at-a-table-while-looking-at-a-computer_l.jpg",
+    "known_class": "Real",
+    "label": "Real",
+    "confidence": 0.6231141090393066,
+    "ai_probability": 0.37688589096069336,
+    "threshold": 0.825
+  },
+  {
+    "file": "dataset\\raw\\AiArtData\\AiArtData\\-how-important-people-from-the-past-really-looked-11-Pics-5ffd5c0f4d77f__880.jpg",
+    "known_class": "AI-generated",
+    "label": "Real",
+    "confidence": 0.21651101112365723,
+    "ai_probability": 0.7834889888763428,
+    "threshold": 0.825
+  }
+]

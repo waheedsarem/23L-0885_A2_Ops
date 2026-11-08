@@ -10,3 +10,16 @@ RealArt/
 evidence/task_1_4/toy_repo/
 evidence/task_1_4/toy_remote/
 evidence/task_1_4/remote_verification/
+artifacts/task_2/checkpoints/
+artifacts/task_2/tuner/
+artifacts/task_2/models/
+artifacts/task_2/logs/
+mlruns/
+mlflow.db
+mlflow.db-shm
+mlflow.db-wal
+mlartifacts/
+.env
+instance/
+.chrome_task4/
+.pytest_tmp/

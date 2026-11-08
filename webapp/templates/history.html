@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}History — VisionGuard{% endblock %}
+{% block content %}
+<section class="page-head"><span class="eyebrow">LOCAL METADATA</span><h1>Prediction history</h1><p>Images are not stored—only sanitized names, timestamps and model outputs.</p></section>
+<section class="table-card">
+  {% if rows %}<table><thead><tr><th>Time (UTC)</th><th>Filename</th><th>Verdict</th><th>Confidence</th><th>P(AI)</th></tr></thead>
+  <tbody>{% for row in rows %}<tr><td>{{ row.created_at }}</td><td>{{ row.filename }}</td><td><span class="pill">{{ row.label }}</span></td><td>{{ '%.1f'|format(row.confidence * 100) }}%</td><td>{{ '%.3f'|format(row.ai_probability) }}</td></tr>{% endfor %}</tbody></table>
+  {% else %}<div class="empty">No predictions yet.</div>{% endif %}
+</section>
+{% endblock %}

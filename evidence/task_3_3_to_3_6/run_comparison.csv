@@ -1,0 +1,7 @@
+run_id,tags.mlflow.runName,params.family,params.logging,params.learning_rate,params.dropout,params.augmentation,params.unfrozen_layers,metrics.best_val_accuracy,metrics.best_val_loss,metrics.best_epoch
+b7f3d59c2984427290bb5d1c7c020c37,manual_mobilenet_frozen,mobilenetv2,manual,0.001,0.35,True,0,0.7534246444702148,0.5267230868339539,5.0
+51733059c4a446feaae9b85fafda68ad,autolog_mobilenet_unfreeze20,mobilenetv2,autolog,1e-05,0.35,True,20,0.7054794430732727,0.547035276889801,5.0
+bbe5de68229246c3ab1b8bce943612d8,autolog_baseline_dropout_025,baseline,autolog,0.001,0.25,True,0,0.6712328791618347,0.6190012693405151,5.0
+4ce11cd1188843679bfbcd37efb815dc,autolog_baseline_no_augmentation,baseline,autolog,0.001,0.4,False,0,0.6232876777648926,0.6421974897384644,5.0
+a2b66867048d4d62ac9611c885f4c31b,manual_baseline_reference,baseline,manual,0.001,0.4,True,0,0.4931506812572479,0.7024661302566528,1.0
+d7fc9bbbc64242949af09a35a93d0c41,autolog_baseline_lr_3e-4,baseline,autolog,0.0003,0.4,True,0,0.45205479860305786,0.6979171633720398,3.0

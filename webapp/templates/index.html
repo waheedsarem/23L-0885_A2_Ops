@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Analyze an image — VisionGuard{% endblock %}
+{% block content %}
+<section class="hero">
+  <span class="eyebrow">AI IMAGE SCREENING</span>
+  <h1>Look closer.<br><em>Decide carefully.</em></h1>
+  <p>Upload an image for a fast estimate from our MobileNetV2 detector. Your image is processed in memory and is not retained.</p>
+</section>
+<section class="upload-card">
+  <form action="{{ url_for('predict') }}" method="post" enctype="multipart/form-data">
+    <label class="drop-zone" for="image">
+      <span class="upload-icon">↑</span>
+      <strong>Choose an image</strong>
+      <small>JPG, PNG or WebP · up to {{ max_mb }} MB</small>
+      <input id="image" name="image" type="file" accept="image/jpeg,image/png,image/webp" required>
+    </label>
+    <button type="submit">Analyze image <span>→</span></button>
+  </form>
+</section>
+<section class="principles">
+  <article><b>01</b><h2>Private by design</h2><p>Uploads are decoded in memory and never written to disk.</p></article>
+  <article><b>02</b><h2>Calibrated caution</h2><p>A conservative threshold reduces false accusations of authentic images.</p></article>
+  <article><b>03</b><h2>Honest limitations</h2><p>The verdict is probabilistic and can be wrong, especially on edited or stylized work.</p></article>
+</section>
+{% endblock %}

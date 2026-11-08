@@ -1,0 +1,26 @@
+{
+  "experiment_id": "1",
+  "completed_run_count": 6,
+  "registered_versions": [
+    {
+      "version": 1,
+      "run_name": "manual_baseline_reference",
+      "run_id": "a2b66867048d4d62ac9611c885f4c31b",
+      "logged_model_id": "m-d8768042812549c0a4c52c96b5840168"
+    },
+    {
+      "version": 2,
+      "run_name": "manual_mobilenet_frozen",
+      "run_id": "b7f3d59c2984427290bb5d1c7c020c37",
+      "logged_model_id": "m-2211f3f52c7445e284b197fbad9bd5e3"
+    }
+  ],
+  "champion": {
+    "version": 2,
+    "run_name": "manual_mobilenet_frozen",
+    "run_id": "b7f3d59c2984427290bb5d1c7c020c37",
+    "logged_model_id": "m-2211f3f52c7445e284b197fbad9bd5e3"
+  },
+  "selection_reason": "MobileNetV2 achieved the strongest validation accuracy among models with a successfully logged reusable model artifact.",
+  "autolog_note": "TensorFlow autologging captured parameters and epoch metrics but its automatic model upload returned INVALID_PARAMETER_VALUE on the DagsHub backend; manual logging captured the model reliably."
+}

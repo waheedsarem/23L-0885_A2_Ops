@@ -1,0 +1,13 @@
+{
+  "toy_trials": 4,
+  "vision_trials": 8,
+  "vision_best": {
+    "trial_id": "2",
+    "status": "COMPLETED",
+    "best_val_accuracy": 0.835616409778595,
+    "dropout": 0.35,
+    "learning_rate": 0.0001,
+    "unfrozen_layers": 30
+  },
+  "warning": "The best validation trial is not an unbiased test estimate; repeated trial selection can overfit validation data."
+}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Result — VisionGuard{% endblock %}
+{% block content %}
+<section class="result-wrap">
+  <a class="back" href="{{ url_for('index') }}">← Analyze another image</a>
+  <div class="result-card {{ 'ai' if result.label == 'AI-generated' else 'real' }}">
+    <span class="eyebrow">ANALYSIS COMPLETE</span>
+    <p class="filename">{{ filename }}</p>
+    <h1>{{ result.label }}</h1>
+    <div class="confidence"><span>{{ '%.1f'|format(result.confidence * 100) }}%</span><small>model confidence</small></div>
+    <div class="meter"><i style="width: {{ result.confidence * 100 }}%"></i></div>
+    <p>AI probability: <strong>{{ '%.3f'|format(result.ai_probability) }}</strong> · decision threshold: {{ '%.3f'|format(result.threshold) }}</p>
+  </div>
+  <aside class="caveat"><strong>Important caveat</strong><p>This is a statistical estimate, not proof of origin. Compression, editing, illustration and unfamiliar generators can cause errors. Do not use this result alone for accusations or high-stakes decisions.</p></aside>
+</section>
+{% endblock %}

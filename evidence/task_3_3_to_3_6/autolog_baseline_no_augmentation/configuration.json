@@ -1,0 +1,9 @@
+{
+  "name": "autolog_baseline_no_augmentation",
+  "logging": "autolog",
+  "family": "baseline",
+  "learning_rate": 0.001,
+  "dropout": 0.4,
+  "augmentation": false,
+  "unfrozen_layers": 0
+}

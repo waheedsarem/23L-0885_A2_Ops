@@ -1,0 +1,35 @@
+{
+  "seed": 230885,
+  "label_mapping": {
+    "real": 0,
+    "AI-generated": 1
+  },
+  "source_readable_images": 975,
+  "unique_images_used": 974,
+  "excluded_exact_duplicate_copies": 1,
+  "splits": {
+    "train": {
+      "total": 681,
+      "AI-generated": 376,
+      "real": 305,
+      "manifest_sha256": "53df5a25b7d4b80d2e38fd6aba8235e6cd7e06087dc6e403d446cc655a847d46"
+    },
+    "validation": {
+      "total": 146,
+      "AI-generated": 81,
+      "real": 65,
+      "manifest_sha256": "b5651f540a0df118bb9afb5955f92a5783a3509dae1cd4fbe986b85ba773ae4e"
+    },
+    "test": {
+      "total": 147,
+      "AI-generated": 81,
+      "real": 66,
+      "manifest_sha256": "ff63483cf756fc1d24155aac32c3f19fc92da24e12de23be0bc458d4bd948725"
+    }
+  },
+  "overlap_checks": {
+    "train_validation": 0,
+    "train_test": 0,
+    "validation_test": 0
+  }
+}

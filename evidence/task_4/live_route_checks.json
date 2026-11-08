@@ -1,0 +1,39 @@
+[
+  {
+    "case": "frontend",
+    "status": 200,
+    "bytes": 1790
+  },
+  {
+    "case": "valid_result",
+    "status": 200,
+    "bytes": 1416
+  },
+  {
+    "case": "history",
+    "status": 200,
+    "bytes": 1166
+  },
+  {
+    "case": "wrong_type",
+    "status": 400,
+    "bytes": 766
+  },
+  {
+    "case": "corrupt_image",
+    "status": 400,
+    "bytes": 760
+  },
+  {
+    "case": "too_large",
+    "status": 413,
+    "bytes": 734
+  },
+  {
+    "case": "health",
+    "status": "ok",
+    "model_loaded": true,
+    "model_path": "D:\\Semester\\Semester 7\\MLOps\\Assignment 2\\artifacts\\task_2\\models\\transfer_final.keras",
+    "threshold": 0.825
+  }
+]
