@@ -1,0 +1,78 @@
+{
+  "operations": [
+    {
+      "command": "docker compose restart web",
+      "exit_code": 0,
+      "output": "Container assignment2-web-1 Restarting \n Container assignment2-web-1 Started"
+    },
+    {
+      "command": "docker compose stop web",
+      "exit_code": 0,
+      "output": "Container assignment2-web-1 Stopping \n Container assignment2-web-1 Stopped"
+    },
+    {
+      "command": "docker compose start web",
+      "exit_code": 0,
+      "output": "Container assignment2-database-1 Waiting \n Container assignment2-database-1 Healthy \n Container assignment2-web-1 Starting \n Container assignment2-web-1 Started"
+    },
+    {
+      "command": "docker compose exec -T web id",
+      "exit_code": 0,
+      "output": "uid=999(visionguard) gid=999(visionguard) groups=999(visionguard)"
+    },
+    {
+      "command": "docker compose exec -T database id",
+      "exit_code": 0,
+      "output": "uid=0(root) gid=0(root) groups=0(root),0(root),1(bin),2(daemon),3(sys),4(adm),6(disk),10(wheel),11(floppy),20(dialout),26(tape),27(video)"
+    },
+    {
+      "command": "docker compose exec -T web getent hosts database",
+      "exit_code": 0,
+      "output": "172.18.0.2      database"
+    },
+    {
+      "command": "docker compose ps",
+      "exit_code": 0,
+      "output": "NAME                     IMAGE                COMMAND                  SERVICE    CREATED          STATUS                            PORTS\nassignment2-database-1   postgres:17-alpine   \"docker-entrypoint.s\u00e2\u20ac\u00a6\"   database   20 minutes ago   Up 20 minutes (healthy)           5432/tcp\nassignment2-web-1        assignment2-web      \"python serve.py\"        web        18 minutes ago   Up 8 seconds (health: starting)   0.0.0.0:8080->8000/tcp, [::]:8080->8000/tcp"
+    },
+    {
+      "command": "docker compose ps",
+      "exit_code": 0,
+      "output": "NAME                     IMAGE                COMMAND                  SERVICE    CREATED          STATUS                    PORTS\nassignment2-database-1   postgres:17-alpine   \"docker-entrypoint.s\u00e2\u20ac\u00a6\"   database   20 minutes ago   Up 20 minutes (healthy)   5432/tcp\nassignment2-web-1        assignment2-web      \"python serve.py\"        web        18 minutes ago   Up 16 seconds (healthy)   0.0.0.0:8080->8000/tcp, [::]:8080->8000/tcp"
+    }
+  ],
+  "deliberate_failure": {
+    "command": "docker compose run --rm --no-deps -e MODEL_PATH=/app/model/missing.keras web",
+    "exit_code": 1,
+    "output": "Container assignment2-web-run-b7f02fbbcb6e Creating \n Container assignment2-web-run-b7f02fbbcb6e Created \nTraceback (most recent call last):\n  File \"/app/serve.py\", line 6, in <module>\n    app = create_app()\n  File \"/app/webapp/app.py\", line 38, in create_app\n    service = inference_service or InferenceService(app.config[\"MODEL_PATH\"], app.config[\"MODEL_THRESHOLD\"])\n                                   ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/webapp/inference.py\", line 18, in __init__\n    raise FileNotFoundError(f\"Model not found: {self.model_path}\")\nFileNotFoundError: Model not found: /app/model/missing.keras"
+  },
+  "diagnosis": "The logs identify FileNotFoundError for /app/model/missing.keras.",
+  "fix": "Restore MODEL_PATH=/app/model/transfer_final.keras; the normal service is healthy.",
+  "health_after_fix": {
+    "database": "postgresql",
+    "history_records": "persistent",
+    "model_loaded": true,
+    "model_name": "VisionGuardDetector",
+    "model_path": "/app/model/transfer_final.keras",
+    "model_version": "champion-v2",
+    "status": "ok",
+    "threshold": 0.825
+  },
+  "image_analysis": {
+    "baseline_image": "2902248672 bytes",
+    "optimized_image": "2204325094 bytes",
+    "reduction": "697,923,578 bytes (24.0%)",
+    "layers": "0B\tCMD [\"python\" \"serve.py\"]\n0B\tHEALTHCHECK {Test:[CMD-SHELL python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4)\" || exit 1] Interval:20s Timeout:5s StartPeriod:1m30s StartInterval:0s Retries:5}\n0B\tEXPOSE [8000/tcp]\n0B\tUSER visionguard\n123kB\tRUN /bin/sh -c mkdir -p /app/instance /app/model && chown -R visionguard:visionguard /app # buildkit\n12.3kB\tCOPY serve.py . # buildkit\n106kB\tCOPY webapp/ webapp/ # buildkit\n61.4kB\tRUN /bin/sh -c groupadd --system visionguard && useradd --system --gid visionguard --create-home visionguard # buildkit\n1.65GB\tRUN /bin/sh -c pip install --no-cache-dir --upgrade pip &&     pip install --no-cache-dir -r requirements-docker.txt # buildkit\n12.3kB\tCOPY requirements-docker.txt . # buildkit\n8.19kB\tWORKDIR /app\n0B\tENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1\n0B\tCMD [\"python3\"]\n16.4kB\tRUN /bin/sh -c set -eux;  for src in idle3 pip3 pydoc3 python3 python3-config; do   dst=\"$(echo \"$src\" | tr -d 3)\";   [ -s \"/usr/local/bin/$src\" ];   [ ! -e \"/usr/local/bin/$dst\" ];   ln -svT \"$src\" \"/usr/local/bin/$dst\";  done # buildkit\n40.5MB\tRUN /bin/sh -c set -eux;   savedAptMark=\"$(apt-mark showmanual)\";  apt-get update;  apt-get install -y --no-install-recommends   dpkg-dev   g++   gcc   gnupg   libbluetooth-dev   libbz2-dev   libc6-dev   libdb-dev   libffi-dev   libgdbm-dev   liblzma-dev   libncursesw5-dev   libreadline-dev   libsqlite3-dev   libssl-dev   make   tk-dev   uuid-dev   wget   xz-utils   zlib1g-dev  ;   wget -O python.tar.xz \"https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz\";  echo \"$PYTHON_SHA256 *python.tar.xz\" | sha256sum -c -;  wget -O python.tar.xz.asc \"https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc\";  GNUPGHOME=\"$(mktemp -d)\"; export GNUPGHOME;  gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys \"$GPG_KEY\";  gpg --batch --verify python.tar.xz.asc python.tar.xz;  gpgconf --kill all;  rm -rf \"$GNUPGHOME\" python.tar.xz.asc;  mkdir -p /usr/src/python;  tar --extract --directory /usr/src/python --strip-components=1 --file python.tar.xz;  rm python.tar.xz;   cd /usr/src/python;  gnuArch=\"$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)\";  ./configure   --build=\"$gnuArch\"   --enable-loadable-sqlite-extensions   --enable-optimizations   --enable-option-checking=fatal   --enable-shared   $(test \"${gnuArch%%-*}\" != 'riscv64' && echo '--with-lto')   --with-ensurepip  ;  nproc=\"$(nproc)\";  EXTRA_CFLAGS=\"$(dpkg-buildflags --get CFLAGS)\";  LDFLAGS=\"$(dpkg-buildflags --get LDFLAGS)\";  LDFLAGS=\"${LDFLAGS:-} -Wl,--strip-all\";  arch=\"$(dpkg --print-architecture)\"; arch=\"${arch##*-}\";  case \"$arch\" in   amd64|arm64)    EXTRA_CFLAGS=\"${EXTRA_CFLAGS:-} -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer\";    ;;   i386)    ;;   *)    EXTRA_CFLAGS=\"${EXTRA_CFLAGS:-} -fno-omit-frame-pointer\";    ;;  esac;  make -j \"$nproc\"   \"EXTRA_CFLAGS=${EXTRA_CFLAGS:-}\"   \"LDFLAGS=${LDFLAGS:-}\"  ;  rm python;  make -j \"$nproc\"   \"EXTRA_CFLAGS=${EXTRA_CFLAGS:-}\"   \"LDFLAGS=${LDFLAGS:-} -Wl,-rpath='\\$\\$ORIGIN/../lib'\"   python  ;  make install;   cd /;  rm -rf /usr/src/python;   find /usr/local -depth   \\(    \\( -type d -a \\( -name test -o -name tests -o -name idle_test \\) \\)    -o \\( -type f -a \\( -name '*.pyc' -o -name '*.pyo' -o -name 'libpython*.a' \\) \\)   \\) -exec rm -rf '{}' +  ;   ldconfig;   apt-mark auto '.*' > /dev/null;  apt-mark manual $savedAptMark;  find /usr/local -type f -executable -not \\( -name '*tkinter*' \\) -exec ldd '{}' ';'   | awk '/=>/ { so = $(NF-1); if (index(so, \"/usr/local/\") == 1) { next }; gsub(\"^/(usr/)?\", \"\", so); printf \"*%s\\n\", so }'   | sort -u   | xargs -rt dpkg-query --search   | awk 'sub(\":$\", \"\", $1) { print $1 }'   | sort -u   | xargs -r apt-mark manual  ;  apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false;  apt-get dist-clean;   export PYTHONDONTWRITEBYTECODE=1;  python3 --version;  pip3 --version # buildkit\n0B\tENV PYTHON_SHA256=abb0102e6d4ae027509bcb82327d9dd85515b44a3ba8ad538cfc5e9847029f68\n0B\tENV PYTHON_VERSION=3.13.18\n0B\tENV GPG_KEY=7169605F62C751356D054A26A821E680E5FA6305\n4.93MB\tRUN /bin/sh -c set -eux;  apt-get update;  apt-get install -y --no-install-recommends   ca-certificates   netbase   tzdata  ;  apt-get dist-clean # buildkit\n0B\tENV LANG=C.UTF-8\n0B\tENV PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\n87.7MB\t# debian.sh --arch 'amd64' out/ 'trixie' '@1793827419'",
+    "database_published_port": {
+      "command": "docker inspect --format {{json .NetworkSettings.Ports}} assignment2-database-1",
+      "exit_code": 0,
+      "output": "{\"5432/tcp\":null}"
+    },
+    "web_published_port": {
+      "command": "docker compose port web 8000",
+      "exit_code": 0,
+      "output": "0.0.0.0:8080"
+    },
+    "optimization": "python:3.13-slim, CPU-only TensorFlow, pip no-cache, and .dockerignore"
+  }
+}

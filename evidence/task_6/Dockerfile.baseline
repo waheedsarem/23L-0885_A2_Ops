@@ -1,0 +1,8 @@
+FROM python:3.13-slim
+WORKDIR /app
+COPY requirements-docker.txt .
+# Deliberately unoptimized baseline: pip's downloaded wheel cache remains in the layer.
+RUN pip install -r requirements-docker.txt
+COPY webapp/ webapp/
+COPY serve.py .
+CMD ["python", "serve.py"]

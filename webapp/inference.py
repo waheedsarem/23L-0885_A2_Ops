@@ -5,8 +5,6 @@ from pathlib import Path
 
 import numpy as np
 from PIL import Image, UnidentifiedImageError
-import tensorflow as tf
-from tensorflow import keras
 
 
 class InvalidImageError(ValueError):
@@ -22,10 +20,12 @@ class InferenceService:
         if not 0 < self.threshold < 1:
             raise ValueError("MODEL_THRESHOLD must be between 0 and 1")
         # Loaded exactly once when the Flask process starts.
+        from tensorflow import keras
         self.model = keras.models.load_model(self.model_path)
 
     @staticmethod
     def preprocess(image_bytes: bytes) -> np.ndarray:
+        import tensorflow as tf
         try:
             with Image.open(BytesIO(image_bytes)) as image:
                 image.verify()

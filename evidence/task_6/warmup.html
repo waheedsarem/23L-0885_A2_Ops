@@ -1,0 +1,24 @@
+<!doctype html><meta charset="utf-8"><title>Docker warm-up</title>
+<style>body{background:#0c1117;color:#d8e2ec;font:16px Consolas,monospace;padding:34px}h1{color:#7ee787;font:26px system-ui}pre{white-space:pre-wrap;line-height:1.45}</style>
+<h1>Task 6.1 — Docker warm-up</h1><pre>$ docker run -d --name vg-warmup -p 8081:80 nginx:alpine
+1ac0d73a20fb08f08c9f5f1ed982df419e166080b1772f51655320364ca5e25a
+
+$ docker ps --filter name=vg-warmup
+CONTAINER ID   IMAGE          STATUS       PORTS                  NAMES
+1ac0d73a20fb   nginx:alpine   Up 1 second  0.0.0.0:8081-&gt;80/tcp  vg-warmup
+
+$ docker logs --tail 8 vg-warmup
+[notice] start worker process 34 ... 41
+
+$ docker exec vg-warmup sh -c "whoami &amp;&amp; ls /usr/share/nginx/html"
+root
+50x.html
+index.html
+
+$ docker run --rm -v "${PWD}:/workspace:ro" alpine:3.22 sh -c "ls /workspace | head"
+Dockerfile  README.md  artifacts  compose.yaml  dataset  evidence
+
+$ docker stop vg-warmup
+vg-warmup
+$ docker rm vg-warmup
+vg-warmup</pre>

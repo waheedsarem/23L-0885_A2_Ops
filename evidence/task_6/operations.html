@@ -1,0 +1,35 @@
+<!doctype html><meta charset='utf-8'><title>Task 6.5 — Compose operations</title>
+<style>body{background:#0c1117;color:#d8e2ec;font:16px Consolas,monospace;padding:34px}
+h1{color:#7ee787;font:26px system-ui}pre{white-space:pre-wrap;line-height:1.45}</style>
+<h1>Task 6.5 — Compose operations</h1><pre>$ docker compose restart web
+Container assignment2-web-1 Restarting 
+ Container assignment2-web-1 Started
+
+$ docker compose stop web
+Container assignment2-web-1 Stopping 
+ Container assignment2-web-1 Stopped
+
+$ docker compose start web
+Container assignment2-database-1 Waiting 
+ Container assignment2-database-1 Healthy 
+ Container assignment2-web-1 Starting 
+ Container assignment2-web-1 Started
+
+$ docker compose exec -T web id
+uid=999(visionguard) gid=999(visionguard) groups=999(visionguard)
+
+$ docker compose exec -T database id
+uid=0(root) gid=0(root) groups=0(root),0(root),1(bin),2(daemon),3(sys),4(adm),6(disk),10(wheel),11(floppy),20(dialout),26(tape),27(video)
+
+$ docker compose exec -T web getent hosts database
+172.18.0.2      database
+
+$ docker compose ps
+NAME                     IMAGE                COMMAND                  SERVICE    CREATED          STATUS                            PORTS
+assignment2-database-1   postgres:17-alpine   &quot;docker-entrypoint.sâ€¦&quot;   database   20 minutes ago   Up 20 minutes (healthy)           5432/tcp
+assignment2-web-1        assignment2-web      &quot;python serve.py&quot;        web        18 minutes ago   Up 8 seconds (health: starting)   0.0.0.0:8080-&gt;8000/tcp, [::]:8080-&gt;8000/tcp
+
+$ docker compose ps
+NAME                     IMAGE                COMMAND                  SERVICE    CREATED          STATUS                    PORTS
+assignment2-database-1   postgres:17-alpine   &quot;docker-entrypoint.sâ€¦&quot;   database   20 minutes ago   Up 20 minutes (healthy)   5432/tcp
+assignment2-web-1        assignment2-web      &quot;python serve.py&quot;        web        18 minutes ago   Up 16 seconds (healthy)   0.0.0.0:8080-&gt;8000/tcp, [::]:8080-&gt;8000/tcp</pre>

@@ -670,3 +670,55 @@ The HTML history route supports filtering by verdict and model. A machine-querya
 Reproducible evidence is stored in `evidence/task_5/database_audit_proof.json`. It contains the full SQLite schema, index list, all-record query, filtered AI-generated query, health response and the verified count of three records after an application restart. The evidence generator is `scripts/capture_task5_evidence.py`.
 
 Automated Flask coverage now contains six tests. In addition to Task 4 validation cases, the tests verify request ID/model identity logging, JSON history queries, filename sanitization, and persistence after constructing a second application instance against the same SQLite file.
+
+---
+
+# Task 6: Containerization with Docker and Docker Compose
+
+## 6.1 Docker warm-up
+
+![Docker warm-up actions](evidence/task_6/warmup.png)
+
+**Figure 6.1.** An `nginx:alpine` container was run with host port 8081 mapped to container port 80, inspected, logged, entered with a shell, stopped and removed. A separate disposable Alpine container mounted the project read-only and listed its contents.
+
+An **image** is an immutable packaged filesystem and startup configuration. A **container** is a running or stopped instance of an image. A **layer** is one cached immutable filesystem change created by an image instruction. A **volume** is Docker-managed persistent data that survives container replacement. **Port mapping** forwards a host port to a container port, such as host `8080` to container `8000`.
+
+## 6.2 Web application Dockerfile
+
+The production [`Dockerfile`](Dockerfile) uses `python:3.13-slim` and installs pinned dependencies from `requirements-docker.txt` before copying source code, allowing Docker to reuse the expensive dependency layer when only application code changes. It then copies only `webapp/` and `serve.py`, creates an unprivileged `visionguard` account, switches to that account, and defines an HTTP health check. `.dockerignore` excludes Git history, credentials, datasets, evidence, local environments, caches, databases and training artifacts.
+
+`tensorflow-cpu==2.21.0` was chosen deliberately because this deployment does not require CUDA. It avoids a GPU-runtime dependency while retaining exact TensorFlow/Keras compatibility with the saved model. The container logs confirm the CPU-optimized TensorFlow build. The model is not embedded in the image: Compose mounts the promoted `transfer_final.keras` artifact read-only at `/app/model/transfer_final.keras`. This keeps model promotion separate from application image rebuilding and ensures the server never calls DagsHub per request.
+
+The validated health response from inside the Compose deployment reported PostgreSQL, persistent history, `VisionGuardDetector`, `champion-v2`, model loaded, threshold `0.825`, and status `ok`.
+
+## 6.3 Compose stack
+
+[`compose.yaml`](compose.yaml) defines `web` and `database`. PostgreSQL uses the named volume `postgres_data`; no database port is published to the host. The web service reaches it as hostname `database` on Compose's private network and waits until `pg_isready` reports healthy. Only the web application is published, at `localhost:8080` by default.
+
+Passwords are substituted from the untracked `.env` file. `.env.example` contains safe names/placeholders, while `.dockerignore` and `.gitignore` prevent the real file entering either Git or the image. Only required application variables are passed to the web container, so the unrelated DagsHub token is not exposed. The app uses PostgreSQL in Compose but retains SQLite for local development and tests.
+
+![Compose operations and service networking](evidence/task_6/operations.png)
+
+**Figure 6.2.** Start, stop and restart operations; shells in both services; non-root web identity; internal DNS resolution of `database`; and final Compose status. The database shows only `5432/tcp`, whereas the web service explicitly publishes host port 8080. Machine-readable proof in `docker_evidence.json` shows `{"5432/tcp": null}`, confirming the database has no published host binding.
+
+## 6.4 Image analysis
+
+![Docker image size and layer analysis](evidence/task_6/image_analysis.png)
+
+**Figure 6.3.** Actual image inspection and full layer history. The deliberately unoptimized baseline that retained pip's wheel cache was **2,902,248,672 bytes (2.90 GB)**. The production image is **2,204,325,094 bytes (2.20 GB)**, a reduction of **697,923,578 bytes (24.0%)**. The largest production layer is the dependency installation at approximately **1.65 GB**, dominated by TensorFlow CPU and its numerical libraries.
+
+The applied optimizations are the slim base, pinned minimal runtime requirements, `PIP_NO_CACHE_DIR=1`, `pip --no-cache-dir`, and a restrictive `.dockerignore`. TensorFlow remains intrinsically large; replacing it would risk preprocessing/model incompatibility and was therefore not done merely to reduce size.
+
+## 6.5 Operations and troubleshooting
+
+![Deliberate failure, diagnosis and fix](evidence/task_6/failure_fix.png)
+
+**Figure 6.4.** A disposable web container was deliberately started with `MODEL_PATH=/app/model/missing.keras`. It exited with status 1, and the logs alone identified `FileNotFoundError: Model not found`. Restoring the Compose value `/app/model/transfer_final.keras` fixed the fault; the subsequent health response proves the normal service, model and PostgreSQL trail are operational.
+
+The evidence also demonstrates `restart`, `stop`, `start`, combined logs and an interactive command inside each service. Full command output is retained in `evidence/task_6/docker_evidence.json` and is reproducible with `scripts/capture_task6_evidence.py`.
+
+## 6.6 GitHub Actions
+
+`.github/workflows/visionguard-ci.yml` runs on pushes and pull requests, grants read-only repository permission, installs the minimal CI dependencies, checks critical Python lint errors, runs the Flask tests, and builds the Docker image. No workflow secrets are required because tests inject a dummy inference service and the Docker build does not download the model. If future deployment credentials are needed, they must be stored in GitHub repository/environment Secrets and referenced with `${{ secrets.NAME }}`, never written into workflow YAML.
+
+The toy workflow under `evidence/task_6/toy_ci/` uses a Python 3.12/3.13 matrix and a small `unittest` file. The README contains the required VisionGuard CI badge. Genuine red/green GitHub screenshots remain dependent on authenticating and pushing to a GitHub repository; they are not fabricated locally.

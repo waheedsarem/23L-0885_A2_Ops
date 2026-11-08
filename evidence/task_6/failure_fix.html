@@ -1,0 +1,19 @@
+<!doctype html><meta charset='utf-8'><title>Task 6.5 — Failure, diagnosis, fix</title>
+<style>body{background:#0c1117;color:#d8e2ec;font:16px Consolas,monospace;padding:34px}
+h1{color:#7ee787;font:26px system-ui}pre{white-space:pre-wrap;line-height:1.45}</style>
+<h1>Task 6.5 — Failure, diagnosis, fix</h1><pre>$ docker compose run --rm --no-deps -e MODEL_PATH=/app/model/missing.keras web
+Container assignment2-web-run-b7f02fbbcb6e Creating 
+ Container assignment2-web-run-b7f02fbbcb6e Created 
+Traceback (most recent call last):
+  File &quot;/app/serve.py&quot;, line 6, in &lt;module&gt;
+    app = create_app()
+  File &quot;/app/webapp/app.py&quot;, line 38, in create_app
+    service = inference_service or InferenceService(app.config[&quot;MODEL_PATH&quot;], app.config[&quot;MODEL_THRESHOLD&quot;])
+                                   ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/app/webapp/inference.py&quot;, line 18, in __init__
+    raise FileNotFoundError(f&quot;Model not found: {self.model_path}&quot;)
+FileNotFoundError: Model not found: /app/model/missing.keras
+
+DIAGNOSIS: The logs identify FileNotFoundError for /app/model/missing.keras.
+FIX: Restore MODEL_PATH=/app/model/transfer_final.keras; the normal service is healthy.
+HEALTH: {&quot;database&quot;: &quot;postgresql&quot;, &quot;history_records&quot;: &quot;persistent&quot;, &quot;model_loaded&quot;: true, &quot;model_name&quot;: &quot;VisionGuardDetector&quot;, &quot;model_path&quot;: &quot;/app/model/transfer_final.keras&quot;, &quot;model_version&quot;: &quot;champion-v2&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;threshold&quot;: 0.825}</pre>

@@ -1,0 +1,42 @@
+services:
+  database:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      APP_HOST: 0.0.0.0
+      APP_PORT: 8000
+      APP_THREADS: ${APP_THREADS:-4}
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}
+      MODEL_PATH: /app/model/transfer_final.keras
+      MODEL_THRESHOLD: ${MODEL_THRESHOLD:-0.825}
+      MODEL_NAME: ${MODEL_NAME:-VisionGuardDetector}
+      MODEL_VERSION: ${MODEL_VERSION:-champion-v2}
+      MAX_UPLOAD_BYTES: ${MAX_UPLOAD_BYTES:-5242880}
+      MAX_HISTORY: ${MAX_HISTORY:-50}
+    volumes:
+      - ./artifacts/task_2/models/transfer_final.keras:/app/model/transfer_final.keras:ro
+    ports:
+      - "${WEB_PORT:-8080}:8000"
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

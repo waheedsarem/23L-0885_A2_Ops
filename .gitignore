@@ -24,3 +24,5 @@ instance/
 evidence/task_5/*.sqlite3
 .chrome_task4/
 .pytest_tmp/
+.pytest_task6*/
+evidence/task_5_server*.log
