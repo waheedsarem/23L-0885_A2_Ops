@@ -6,7 +6,7 @@ from pathlib import Path
 from PIL import Image
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--task', choices=['1.1', '1.2'], default='1.1')
+parser.add_argument('--task', choices=['1.1', '1.2', '1.4'], default='1.1')
 args = parser.parse_args()
 
 user32 = ctypes.WinDLL("user32")

@@ -3,8 +3,8 @@
 **Roll number:** 23L-0885  
 **Project name:** 23L-0885_A2_Ops  
 **Working directory:** `D:\Semester\Semester 7\MLOps\Assignment 2`  
-**Scope of this draft:** Tasks 1.1, 1.2, and 1.3. Task 1.4 has not been completed.  
-**AI assistance disclosure:** OpenAI Codex assisted with environment setup, dataset download, audit and EDA scripts, verification, evidence capture, and this report. Review and understand the commands, figures, and results before submitting.
+**Scope of this draft:** Task 1 (sub-tasks 1.1-1.4) is complete.  
+**AI assistance disclosure:** OpenAI Codex assisted with environment setup, dataset download, audit and EDA scripts, Git/DVC workflows, verification, evidence capture, and this report. Review and understand the commands, figures, and results before submitting.
 
 ## Task 1: Data Understanding and Versioning
 
@@ -289,3 +289,102 @@ The middle 50% of AI-generated widths spans **768–1,449.5 px**, compared with 
 The figures were inspected at their exported resolution after generation. The sample grid is **2,090 × 2,037 pixels**, and the histogram figure is **2,720 × 1,569 pixels**, which keeps labels and individual images readable when placed in the final report.
 
 **Result:** Task 1.3 is complete. The report includes a reproducible per-class sample grid, per-class histograms for all three required measurements, figure captions, and two-to-three-sentence interpretations for each figure. No training split, augmentation, or model preprocessing was performed as part of this exploratory task.
+
+### 1.4 DVC (data version control)
+
+#### Purpose and setup
+
+Git and DVC were initialized in the existing `23L-0885_A2_Ops` project so the completed Task 1 work was preserved. The Git remote is the private [DagsHub repository](https://dagshub.com/waheedsarem/23L-0885_A2_Ops), and the DVC remote uses DagsHub's S3-compatible storage:
+
+```powershell
+git init -b main
+git remote add origin https://dagshub.com/waheedsarem/23L-0885_A2_Ops.git
+.\.venv\Scripts\dvc.exe init
+.\.venv\Scripts\dvc.exe remote add -d origin s3://dvc
+.\.venv\Scripts\dvc.exe remote modify origin endpointurl https://dagshub.com/waheedsarem/23L-0885_A2_Ops.s3
+```
+
+DVC **3.67.1** with `dvc-s3` **3.3.0** was installed in `.venv`. Only the endpoint is stored in tracked `.dvc/config`. The DagsHub access token is stored as the access key and secret key in `.dvc/config.local`, which DVC automatically lists in `.dvc/.gitignore`; the token is not present in Git, screenshots, or this report. DagsHub documents this `--local` credential pattern in its [DVC integration guide](https://dagshub.com/docs/integration_guide/dvc/).
+
+#### Toy CSV: two data versions
+
+The required toy exercise was performed in a new isolated repository at `evidence/task_1_4/toy_repo/`. Its generated Git/DVC internals and data remote are excluded from the main repository. Version 1 contained two rows:
+
+```csv
+id,value
+1,alpha
+2,beta
+```
+
+It was tracked with `dvc add data/toy.csv` and committed as `b3c76ce` (`Toy DVC: track CSV version 1`). A third row, `3,gamma`, was then added, the pointer was updated with `dvc add`, and version 2 was committed as `26335d6` (`Toy DVC: update CSV to version 2`). The `dvc-toy` branch containing both commits was pushed to DagsHub.
+
+| Toy version | Git commit | Rows | File size | DVC MD5 |
+|---|---|---:|---:|---|
+| Version 1 | `b3c76ce` | 2 | 24 bytes | `6bd3bfa8c3a8f1c5177bbe9ae4463ad6` |
+| Version 2 | `26335d6` | 3 | 32 bytes | `a63bbadcd07bbedd9b44379e7243c4bb` |
+
+The older version was restored by checking out version 1's `.dvc` pointer and running `dvc checkout`. This produced the original two-row CSV. The current pointer was then restored from `dvc-toy`, and another `dvc checkout` returned the three-row version without storing either CSV directly in Git.
+
+![Terminal showing the two toy Git commits, pointer hashes, and recovered CSV](evidence/task_1_4/toy.png)
+
+**Figure 1.4a. Toy Git/DVC history.** The terminal shows both toy commits on the remote-tracking `dvc-toy` branch and the different pointer hashes and sizes for versions 1 and 2. It also shows the recovered current CSV, matching MD5, two objects in the separate data remote, and the DagsHub branch hash.
+
+#### Toy remote push, deletion, and recovery
+
+A separate local folder was configured as the toy DVC remote, as explicitly permitted by the assignment:
+
+```powershell
+dvc remote add -d localstore ..\toy_remote
+dvc push -r localstore
+```
+
+Both version objects were pushed. For a strong recovery test, the working CSV and its exact current object in `.dvc/cache` were both removed after confirming the separate remote object existed. Therefore, the subsequent `dvc pull -r localstore` could not reuse the working file or local cache; it fetched the object from the remote, rebuilt both, and restored MD5 `a63bbadcd07bbedd9b44379e7243c4bb`.
+
+![Terminal proving deletion of the toy data and local cache followed by remote recovery](evidence/task_1_4/recovery-final.png)
+
+**Figure 1.4b. Remote-only recovery proof.** Before the pull, the separate remote object remains available while both the local CSV and its cache object report `False`. After the pull, both report `True`, the three expected rows are present, and the recovered MD5 matches version 2; the script reports `REMOTE RECOVERY: PASS`.
+
+#### Applying DVC to the assignment dataset
+
+A clean project-level copy of the exact audited Kaggle release was created at `dataset/raw/`. Before tracking, it was independently checked against the Task 1.2 source: both contained **975 files** and **503,783,378 bytes**. DVC then generated [dataset/raw.dvc](dataset/raw.dvc):
+
+```yaml
+outs:
+- md5: b2cec67839f742df4653f66d4bcbbafb.dir
+  size: 503783378
+  nfiles: 975
+  hash: md5
+  path: raw
+```
+
+The pointer and DVC-generated ignore file were committed as `7f467a7` (`Track audited image dataset with DVC`). `dvc push -r origin` uploaded all **975 files** to DagsHub storage. `dvc status -c` subsequently reported `Cache and remote 'origin' are in sync`, while ordinary `dvc status` reported that data and pipelines were up to date. The `main` and `dvc-toy` branches were both pushed and their remote hashes were checked with `git ls-remote`.
+
+![Terminal showing the actual dataset pointer, DagsHub synchronization, and remote branches](evidence/task_1_4/dataset.png)
+
+**Figure 1.4c. Dataset version and DagsHub synchronization.** The terminal shows the 975-file pointer, its directory hash and exact byte size, the non-secret `s3://dvc` remote, and confirmation that the cache and DagsHub remote are synchronized. It also proves `.dvc/config.local` is ignored and displays the remote hashes for `main` and `dvc-toy` without exposing credentials.
+
+#### What the pointer file contains
+
+`dataset/raw.dvc` is a small YAML metadata file. Its `.dir` MD5 identifies DVC's manifest for the directory state; `size` is the combined data size, `nfiles` records the number of files, and `path` tells DVC where to materialize the directory. For the single toy CSV, the pointer instead stores the file's MD5, size, hash type, and relative path.
+
+The pointer does **not** contain image bytes or a downloadable copy of the dataset. Git versions this small pointer and the DVC configuration, while DVC stores content-addressed objects in its local cache and configured remote. Changing data changes the pointer hash, so a Git commit selects the matching data version and `dvc pull` retrieves it.
+
+Large datasets do not belong directly in Git because Git retains every committed blob in repository history, making clones, fetches, and repository maintenance increasingly expensive even after files are later removed from the working tree. DVC keeps Git history small, transfers large objects only through data storage, deduplicates unchanged content by hash, and still links each code commit to a reproducible dataset version.
+
+#### Problems encountered and verification
+
+The execution sandbox used a different Windows account from the folder owner, so Git required the assignment directory to be marked as a safe repository. DVC also initially selected a shared cache under `C:\ProgramData`, which the sandbox could not write; `DVC_SITE_CACHE_DIR` redirected this operational cache into the project's ignored `.dvc/site-cache`. These are sandbox-specific execution details and do not change the repository or data version.
+
+Because the DagsHub account was created through GitHub, it had no separate account password for Git Credential Manager. A DagsHub access token was used as the Git password and for DVC storage, following DagsHub's documented authentication method. A helper script, [configure_dagshub_auth.ps1](scripts/configure_dagshub_auth.ps1), accepts the token through a masked Windows credential dialog and writes it only to ignored local DVC configuration.
+
+Verification completed successfully:
+
+- The main repository has a clean DVC state and tracks `origin/main`.
+- DagsHub's DVC remote contains all 975 dataset files and matches the local cache.
+- The `dvc-toy` remote branch contains both toy pointer commits.
+- Version 1 and version 2 produce different pointer hashes and correct contents.
+- Remote-only toy recovery succeeds after deleting both the local CSV and current cache object.
+- `git check-ignore .dvc/config.local` confirms credentials cannot be staged by the normal workflow.
+- Tracked files contain no DVC access-key or secret-key settings.
+
+**Result:** Task 1.4 is complete. The toy repository demonstrates initialization, two committed data versions, older-version restoration, remote push, local deletion, and remote pull. The complete audited image dataset is tracked by a small DVC pointer, stored in synchronized DagsHub storage, and linked to the Git history without placing its 503.8 MB of image bytes in Git.
