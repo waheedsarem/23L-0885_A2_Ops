@@ -652,3 +652,21 @@ Run the production server with:
 ```
 
 The verified live routes returned HTTP 200 for `/`, `/history`, and `/health`; validation returned HTTP 400, 400 and 413 for the three required failure cases. The detailed checks are saved in `evidence/task_4/live_route_checks.json`.
+
+---
+
+# Task 5: Database Trail
+
+VisionGuard uses SQLite to maintain a permanent, queryable audit trail. A successful prediction inserts one row into the `predictions` table; rejected or undecodable uploads do not create a misleading decision record. The database survives Flask process restarts and is stored at the environment-configurable `DATABASE_PATH`. It is excluded from Git because it is deployment state rather than source code.
+
+Each record contains a unique request ID, UTC timestamp, sanitized filename, verdict, confidence, raw AI probability, decision threshold, model name and model version. This directly answers what was decided, when it was decided, which model made the decision, and how confident it was. Uploaded image bytes are never stored. Existing Task 4 databases are migrated in place: the application checks the current SQLite schema and adds the new audit columns with safe legacy defaults.
+
+![Permanent prediction audit trail](evidence/task_5/history_audit_trail.png)
+
+**Figure 5.1.** Flask History view backed by SQLite after recreating the application. The three records remained available after restart, demonstrating persistence. The page exposes verdict and model filters and displays the model version and operating threshold alongside each decision.
+
+The HTML history route supports filtering by verdict and model. A machine-queryable `GET /api/history` endpoint returns JSON and accepts `label` and bounded `limit` parameters. Invalid query values receive HTTP 400 rather than being interpolated into SQL; database values are always passed as SQLite parameters. Indexes on timestamp, verdict and model identity support common audit queries.
+
+Reproducible evidence is stored in `evidence/task_5/database_audit_proof.json`. It contains the full SQLite schema, index list, all-record query, filtered AI-generated query, health response and the verified count of three records after an application restart. The evidence generator is `scripts/capture_task5_evidence.py`.
+
+Automated Flask coverage now contains six tests. In addition to Task 4 validation cases, the tests verify request ID/model identity logging, JSON history queries, filename sanitization, and persistence after constructing a second application instance against the same SQLite file.

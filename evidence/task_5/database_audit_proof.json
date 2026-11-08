@@ -1,0 +1,161 @@
+{
+  "database": "SQLite",
+  "database_file": "evidence\\task_5\\audit_evidence.sqlite3",
+  "records_after_app_restart": 3,
+  "schema": [
+    {
+      "position": 0,
+      "name": "id",
+      "type": "INTEGER",
+      "not_null": 0,
+      "default": null,
+      "primary_key": 1
+    },
+    {
+      "position": 1,
+      "name": "request_id",
+      "type": "TEXT",
+      "not_null": 1,
+      "default": null,
+      "primary_key": 0
+    },
+    {
+      "position": 2,
+      "name": "created_at",
+      "type": "TEXT",
+      "not_null": 1,
+      "default": null,
+      "primary_key": 0
+    },
+    {
+      "position": 3,
+      "name": "filename",
+      "type": "TEXT",
+      "not_null": 1,
+      "default": null,
+      "primary_key": 0
+    },
+    {
+      "position": 4,
+      "name": "label",
+      "type": "TEXT",
+      "not_null": 1,
+      "default": null,
+      "primary_key": 0
+    },
+    {
+      "position": 5,
+      "name": "confidence",
+      "type": "REAL",
+      "not_null": 1,
+      "default": null,
+      "primary_key": 0
+    },
+    {
+      "position": 6,
+      "name": "ai_probability",
+      "type": "REAL",
+      "not_null": 1,
+      "default": null,
+      "primary_key": 0
+    },
+    {
+      "position": 7,
+      "name": "threshold",
+      "type": "REAL",
+      "not_null": 1,
+      "default": null,
+      "primary_key": 0
+    },
+    {
+      "position": 8,
+      "name": "model_name",
+      "type": "TEXT",
+      "not_null": 1,
+      "default": null,
+      "primary_key": 0
+    },
+    {
+      "position": 9,
+      "name": "model_version",
+      "type": "TEXT",
+      "not_null": 1,
+      "default": null,
+      "primary_key": 0
+    }
+  ],
+  "indexes": [
+    "idx_predictions_model",
+    "idx_predictions_label",
+    "idx_predictions_created_at"
+  ],
+  "all_records_query": {
+    "count": 3,
+    "records": [
+      {
+        "ai_probability": 0.214,
+        "confidence": 0.786,
+        "created_at": "2026-11-08T11:26:42+00:00",
+        "filename": "second_real.png",
+        "id": 3,
+        "label": "Real",
+        "model_name": "VisionGuardDetector",
+        "model_version": "champion-v2",
+        "request_id": "24378267-4b1f-4ef9-957c-7bf93a5e5332",
+        "threshold": 0.825
+      },
+      {
+        "ai_probability": 0.906,
+        "confidence": 0.906,
+        "created_at": "2026-11-08T11:26:42+00:00",
+        "filename": "known_ai.png",
+        "id": 2,
+        "label": "AI-generated",
+        "model_name": "VisionGuardDetector",
+        "model_version": "champion-v2",
+        "request_id": "113361db-dc42-4802-a0c1-a233f8f1a6aa",
+        "threshold": 0.825
+      },
+      {
+        "ai_probability": 0.083,
+        "confidence": 0.917,
+        "created_at": "2026-11-08T11:26:41+00:00",
+        "filename": "known_real.png",
+        "id": 1,
+        "label": "Real",
+        "model_name": "VisionGuardDetector",
+        "model_version": "champion-v2",
+        "request_id": "1b505262-db66-416f-a78b-f9af033c2f23",
+        "threshold": 0.825
+      }
+    ]
+  },
+  "filtered_ai_generated_query": {
+    "count": 1,
+    "records": [
+      {
+        "ai_probability": 0.906,
+        "confidence": 0.906,
+        "created_at": "2026-11-08T11:26:42+00:00",
+        "filename": "known_ai.png",
+        "id": 2,
+        "label": "AI-generated",
+        "model_name": "VisionGuardDetector",
+        "model_version": "champion-v2",
+        "request_id": "113361db-dc42-4802-a0c1-a233f8f1a6aa",
+        "threshold": 0.825
+      }
+    ]
+  },
+  "health": {
+    "database": "sqlite",
+    "history_records": "persistent",
+    "model_loaded": true,
+    "model_name": "VisionGuardDetector",
+    "model_path": "artifacts\\task_2\\models\\transfer_final.keras",
+    "model_version": "champion-v2",
+    "status": "ok",
+    "threshold": 0.825
+  },
+  "privacy": "Only decision metadata is stored; uploaded image bytes are not retained."
+}

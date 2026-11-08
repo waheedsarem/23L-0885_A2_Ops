@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 {% block title %}History — VisionGuard{% endblock %}
 {% block content %}
-<section class="page-head"><span class="eyebrow">LOCAL METADATA</span><h1>Prediction history</h1><p>Images are not stored—only sanitized names, timestamps and model outputs.</p></section>
+<section class="page-head"><span class="eyebrow">PERMANENT AUDIT TRAIL</span><h1>Prediction history</h1><p>Images are not stored—each request retains only queryable decision metadata.</p></section>
 <section class="table-card">
-  {% if rows %}<table><thead><tr><th>Time (UTC)</th><th>Filename</th><th>Verdict</th><th>Confidence</th><th>P(AI)</th></tr></thead>
-  <tbody>{% for row in rows %}<tr><td>{{ row.created_at }}</td><td>{{ row.filename }}</td><td><span class="pill">{{ row.label }}</span></td><td>{{ '%.1f'|format(row.confidence * 100) }}%</td><td>{{ '%.3f'|format(row.ai_probability) }}</td></tr>{% endfor %}</tbody></table>
+  <form class="filters" method="get"><label>Verdict<select name="label"><option value="">All</option><option value="Real" {{ 'selected' if selected_label == 'Real' }}>Real</option><option value="AI-generated" {{ 'selected' if selected_label == 'AI-generated' }}>AI-generated</option></select></label><label>Model<select name="model"><option value="">All</option>{% for model in models %}<option value="{{ model }}" {{ 'selected' if selected_model == model }}>{{ model }}</option>{% endfor %}</select></label><button type="submit">Filter history</button></form>
+  {% if rows %}<table><thead><tr><th>Time (UTC)</th><th>Request ID</th><th>Filename</th><th>Decision</th><th>Confidence</th><th>Model</th></tr></thead>
+  <tbody>{% for row in rows %}<tr><td>{{ row.created_at }}</td><td><code>{{ row.request_id[:8] }}</code></td><td>{{ row.filename }}</td><td><span class="pill">{{ row.label }}</span><small>P(AI) {{ '%.3f'|format(row.ai_probability) }}</small></td><td>{{ '%.1f'|format(row.confidence * 100) }}%</td><td>{{ row.model_name }}<small>{{ row.model_version }} · t={{ '%.3f'|format(row.threshold) }}</small></td></tr>{% endfor %}</tbody></table>
   {% else %}<div class="empty">No predictions yet.</div>{% endif %}
 </section>
 {% endblock %}
