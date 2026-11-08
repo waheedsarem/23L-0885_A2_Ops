@@ -721,4 +721,22 @@ The evidence also demonstrates `restart`, `stop`, `start`, combined logs and an 
 
 `.github/workflows/visionguard-ci.yml` runs on pushes and pull requests, grants read-only repository permission, installs the minimal CI dependencies, checks critical Python lint errors, runs the Flask tests, and builds the Docker image. No workflow secrets are required because tests inject a dummy inference service and the Docker build does not download the model. If future deployment credentials are needed, they must be stored in GitHub repository/environment Secrets and referenced with `${{ secrets.NAME }}`, never written into workflow YAML.
 
-The toy workflow under `evidence/task_6/toy_ci/` uses a Python 3.12/3.13 matrix and a small `unittest` file. The README contains the required VisionGuard CI badge. Genuine red/green GitHub screenshots remain dependent on authenticating and pushing to a GitHub repository; they are not fabricated locally.
+The isolated toy workflow `.github/workflows/toy-matrix.yml` uses a Python 3.12/3.13 matrix and the small `toy_ci/test_math.py` test. It was kept in the authorized assignment repository rather than creating an additional public repository. The first commit deliberately expected `2 + 2 == 5`, producing a genuine red matrix run; the next commit corrected the assertion to `4`, producing a green run on both Python versions.
+
+![Failed toy Python matrix](evidence/task_6/toy_red_matrix.png)
+
+**Figure 6.5.** Genuine failed GitHub Actions toy run `42479480462`, triggered by the deliberately incorrect assertion across the Python-version matrix.
+
+![Successful toy Python matrix](evidence/task_6/toy_green_matrix.png)
+
+**Figure 6.6.** Corrected toy run `42479540385`, green after fixing the test.
+
+The first real VisionGuard run also exposed a legitimate CI-only import-path problem: invoking the `pytest` executable could not import `webapp` on Ubuntu. Changing the command to `python -m pytest` fixed the environment-independent module path. The corrected workflow passed linting, all six Flask tests and the Docker image build.
+
+![Failed VisionGuard workflow](evidence/task_6/github_red_run.png)
+
+**Figure 6.7.** Initial red VisionGuard run `42479144696` before the import-path correction.
+
+![Successful VisionGuard workflow](evidence/task_6/github_green_run.png)
+
+**Figure 6.8.** Green VisionGuard run `42479229874` after the fix. The README's live `VisionGuard CI` badge reports this workflow status.
