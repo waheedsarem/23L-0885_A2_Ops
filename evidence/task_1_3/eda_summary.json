@@ -1,0 +1,36 @@
+{
+  "seed": 230885,
+  "samples_per_class": 8,
+  "classes": {
+    "AI-generated": {
+      "count": 539,
+      "width_q1": 768.0,
+      "width_median": 1024.0,
+      "width_q3": 1449.5,
+      "height_q1": 588.0,
+      "height_median": 800.0,
+      "height_q3": 1052.0,
+      "size_q1_bytes": 91705.5,
+      "size_median_bytes": 199760.0,
+      "size_q3_bytes": 588788.0,
+      "width_over_3000": 11,
+      "height_over_2500": 6,
+      "size_over_2mib": 25
+    },
+    "real": {
+      "count": 436,
+      "width_q1": 626.0,
+      "width_median": 920.0,
+      "width_q3": 1600.0,
+      "height_q1": 465.75,
+      "height_median": 720.0,
+      "height_q3": 1184.5,
+      "size_q1_bytes": 62526.5,
+      "size_median_bytes": 144840.0,
+      "size_q3_bytes": 409542.25,
+      "width_over_3000": 26,
+      "height_over_2500": 27,
+      "size_over_2mib": 22
+    }
+  }
+}

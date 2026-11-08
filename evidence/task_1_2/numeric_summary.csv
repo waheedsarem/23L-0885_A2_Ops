@@ -1,0 +1,10 @@
+class,metric,readable_images,min,median,max
+AI-generated,width,539,225,1024,6000
+AI-generated,height,539,135,800,4001
+AI-generated,file_size_bytes,539,11738,199760,5626183
+real,width,436,183,920.0,8495
+real,height,436,158,720.0,7091
+real,file_size_bytes,436,11311,144840.0,10195352
+ALL,width,975,183,1024,8495
+ALL,height,975,135,768,7091
+ALL,file_size_bytes,975,11311,169093,10195352

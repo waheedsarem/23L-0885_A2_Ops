@@ -1,0 +1,134 @@
+{
+  "project": "23L-0885_A2_Ops",
+  "recorded_at": "2026-11-08T12:14:46+05:00",
+  "user": "wahee",
+  "dataset_root": "D:\\Semester\\Semester 7\\MLOps\\Assignment 2\\data\\kaggle_cache\\datasets\\cashbowman\\ai-generated-images-vs-real-images\\versions\\1",
+  "class_folder_mapping": {
+    "AiArtData": "AI-generated",
+    "RealArt": "real"
+  },
+  "total_files": 975,
+  "image_files": 975,
+  "non_image_files": 0,
+  "status_counts": {
+    "ok": 975
+  },
+  "class_counts": [
+    {
+      "class": "AI-generated",
+      "image_files": 539,
+      "readable": 539,
+      "corrupt_or_unreadable": 0,
+      "file_read_errors": 0,
+      "safety_limit": 0,
+      "duplicate_groups_within_class": 1,
+      "duplicate_excess_within_class": 1,
+      "files_in_global_duplicate_groups": 2
+    },
+    {
+      "class": "real",
+      "image_files": 436,
+      "readable": 436,
+      "corrupt_or_unreadable": 0,
+      "file_read_errors": 0,
+      "safety_limit": 0,
+      "duplicate_groups_within_class": 0,
+      "duplicate_excess_within_class": 0,
+      "files_in_global_duplicate_groups": 0
+    },
+    {
+      "class": "ALL",
+      "image_files": 975,
+      "readable": 975,
+      "corrupt_or_unreadable": 0,
+      "file_read_errors": 0,
+      "safety_limit": 0,
+      "duplicate_groups_within_class": 1,
+      "duplicate_excess_within_class": 1,
+      "files_in_global_duplicate_groups": 2
+    }
+  ],
+  "numeric_summary": [
+    {
+      "class": "AI-generated",
+      "metric": "width",
+      "readable_images": 539,
+      "min": 225,
+      "median": 1024,
+      "max": 6000
+    },
+    {
+      "class": "AI-generated",
+      "metric": "height",
+      "readable_images": 539,
+      "min": 135,
+      "median": 800,
+      "max": 4001
+    },
+    {
+      "class": "AI-generated",
+      "metric": "file_size_bytes",
+      "readable_images": 539,
+      "min": 11738,
+      "median": 199760,
+      "max": 5626183
+    },
+    {
+      "class": "real",
+      "metric": "width",
+      "readable_images": 436,
+      "min": 183,
+      "median": 920.0,
+      "max": 8495
+    },
+    {
+      "class": "real",
+      "metric": "height",
+      "readable_images": 436,
+      "min": 158,
+      "median": 720.0,
+      "max": 7091
+    },
+    {
+      "class": "real",
+      "metric": "file_size_bytes",
+      "readable_images": 436,
+      "min": 11311,
+      "median": 144840.0,
+      "max": 10195352
+    },
+    {
+      "class": "ALL",
+      "metric": "width",
+      "readable_images": 975,
+      "min": 183,
+      "median": 1024,
+      "max": 8495
+    },
+    {
+      "class": "ALL",
+      "metric": "height",
+      "readable_images": 975,
+      "min": 135,
+      "median": 768,
+      "max": 7091
+    },
+    {
+      "class": "ALL",
+      "metric": "file_size_bytes",
+      "readable_images": 975,
+      "min": 11311,
+      "median": 169093,
+      "max": 10195352
+    }
+  ],
+  "duplicate_groups": 1,
+  "files_in_duplicate_groups": 2,
+  "duplicate_excess": 1,
+  "cross_class_duplicate_groups": 0,
+  "unmapped_images": 0,
+  "manifest_sha256": "4b1d1fcf3034d80700237bd5b8aec374019e38c85f4b7ab21b73d22cf4659dae",
+  "elapsed_seconds": 53.14,
+  "statistics_population": "Readable images only; duplicates retained; dimensions in stored orientation; sizes in bytes",
+  "duplicate_definition": "Identical full-file SHA-256; excess counts all copies beyond one per group"
+}

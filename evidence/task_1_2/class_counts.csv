@@ -1,0 +1,4 @@
+class,image_files,readable,corrupt_or_unreadable,file_read_errors,safety_limit,duplicate_groups_within_class,duplicate_excess_within_class,files_in_global_duplicate_groups
+AI-generated,539,539,0,0,0,1,1,2
+real,436,436,0,0,0,0,0,0
+ALL,975,975,0,0,0,1,1,2
